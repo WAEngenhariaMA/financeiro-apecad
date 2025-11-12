@@ -1,329 +1,449 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Financeiro — Despesas & Receitas</title>
     <style>
       :root {
-        --bg: #1c130e;
-        --bg-2: #231710;
-        --card: #241a14;
-        --ink: #f6eadd;
-        --muted: #d1c2b1;
-        --line: #3a2a1f;
+        --bg: #0f172a;
+        --panel: #0b1220;
+        --line: #1f2937;
+        --ink: #e5e7eb;
+        --muted: #94a3b8;
         --brand: #f59e0b;
-        --ok: #18a77a;
-        --bad: #d64b42;
       }
       * {
         box-sizing: border-box;
       }
-      html,
-      body {
-        height: 100%;
-      }
       body {
         margin: 0;
-        background: linear-gradient(180deg, var(--bg), var(--bg-2));
+        background: linear-gradient(160deg, var(--bg), #060a12);
         color: var(--ink);
-        font-family: Inter, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell,
-          sans-serif;
+        font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
       }
-
-      .container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 18px;
+      .wrap {
+        max-width: 980px;
+        margin: 16px auto;
+        padding: 0 14px;
       }
       header {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 14px;
-      }
-      .hgroup h1 {
-        margin: 0;
-        font-size: 18px;
-      }
-      .hgroup p {
-        margin: 2px 0 0;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .btn {
-        cursor: pointer;
-        background: var(--brand);
-        color: #2b1702;
-        border: none;
-        border-radius: 12px;
-        padding: 10px 14px;
-        font-weight: 700;
-        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.25);
-        transition: 0.2s;
-      }
-      .btn:hover {
-        transform: translateY(-1px);
-      }
-      .btn.ghost {
-        background: transparent;
-        border: 1px solid var(--line);
-        color: var(--ink);
-        box-shadow: none;
-      }
-      .btn.bad {
-        background: var(--bad);
-        color: #2b0a0a;
-      }
-      .btn.ok {
-        background: #15a374;
-        color: #021d15;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-      @media (max-width: 920px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .card {
+        position: sticky;
+        top: 0;
+        z-index: 10;
         background: linear-gradient(
           180deg,
           rgba(255, 255, 255, 0.03),
-          rgba(255, 255, 255, 0)
+          rgba(0, 0, 0, 0)
         );
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 14px;
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid var(--line);
       }
-      .card h3 {
-        margin: 0 0 8px 0;
-        font-size: 15px;
-      }
-      .hint {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .stack {
+      .head-inner {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 14px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
         gap: 10px;
+      }
+      .brand img {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid var(--line);
+        background: #000;
+      }
+      .brand h1 {
+        font-size: 16px;
+        margin: 0;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+      .head-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      a.btn-link,
+      button.btn {
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        background: #0a0f1a;
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      button.btn {
+        background: var(--brand);
+        color: #111;
+        font-weight: 800;
+        border: none;
+      }
+      button.ghost {
+        background: transparent;
+        color: #fff;
+        border: 1px solid var(--line);
+      }
+      .badge {
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #0a0f1a;
+        color: #cbd5e1;
+        font-size: 11px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+        margin: 12px 0;
       }
       .row {
         display: flex;
         gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
       }
-      .row.split {
+      label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      input,
+      select {
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        background: #0a0f1a;
+        color: #fff;
+      }
+      input::placeholder {
+        color: #64748b;
+      }
+      input[type="number"] {
+        width: 110px;
+        text-align: right;
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+      h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+      .grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
       }
-      @media (max-width: 480px) {
-        .row {
-          flex-direction: column;
-        }
-        .row.split {
+      .grid.two {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (max-width: 860px) {
+        .grid.two {
           grid-template-columns: 1fr;
         }
       }
-
-      .input,
-      select {
-        appearance: none;
-        background: #21170f;
-        border: 1px solid var(--line);
-        color: var(--ink);
-        padding: 11px 12px;
-        border-radius: 12px;
-        outline: none;
+      .table {
         width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
       }
-      .input::placeholder {
-        color: #bcae9f;
+      .table th,
+      .table td {
+        border-bottom: 1px solid var(--line);
+        padding: 8px;
+        text-align: left;
       }
-
-      .toolbar {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+      .table thead th {
+        color: #9aa4b2;
+        font-size: 12px;
+        background: #0c1424;
       }
-
-      table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0 7px;
+      .empty {
+        padding: 12px;
+        border: 1px dashed var(--line);
+        border-radius: 10px;
+        color: #9aa4b2;
+        text-align: center;
+      }
+      .ok {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid #064e3b;
+        color: #a7f3d0;
+        padding: 10px;
+        border-radius: 10px;
         margin-top: 8px;
+        font-size: 13px;
       }
-      thead th {
+      .err {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid #7f1d1d;
+        color: #fecaca;
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 8px;
+        font-size: 13px;
+      }
+      .note {
         font-size: 12px;
         color: var(--muted);
-        text-align: left;
-        padding: 6px 8px;
       }
-      tbody tr {
-        background: var(--card);
+      .hide {
+        display: none !important;
+      }
+      .sep {
+        height: 1px;
+        background: var(--line);
+        margin: 10px 0;
+        border-radius: 1px;
+      }
+      .pill {
+        padding: 6px 10px;
+        border-radius: 999px;
         border: 1px solid var(--line);
+        font-size: 12px;
       }
-      tbody td {
-        padding: 8px 8px;
-        vertical-align: middle;
-        border-top: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
+      .pill.green {
+        background: rgba(16, 185, 129, 0.1);
+        color: #6ee7b7;
+        border-color: #059669;
       }
-      tbody tr td:first-child {
-        border-left: 1px solid var(--line);
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
+      .pill.red {
+        background: rgba(239, 68, 68, 0.12);
+        color: #fecaca;
+        border-color: #b91c1c;
       }
-      tbody tr td:last-child {
-        border-right: 1px solid var(--line);
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
+      .pill.yellow {
+        background: rgba(245, 158, 11, 0.12);
+        color: #fed7aa;
+        border-color: #c2410c;
       }
-      .right {
-        margin-left: auto;
+      .actions-cell button {
+        margin-right: 4px;
+        margin-bottom: 4px;
+      }
+      .inp-inline {
+        width: 100%;
+      }
+      @media (max-width: 640px) {
+        .head-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <header>
-        <div class="hgroup">
-          <h1>Financeiro — Despesas & Receitas</h1>
-          <p>Cadastro • Filtros • Tabela • Google Sheets</p>
+    <header>
+      <div class="head-inner wrap">
+        <div class="brand">
+          <img id="logo" alt="Logo" />
+          <h1>Financeiro — Despesas &amp; Receitas</h1>
         </div>
-        <div class="row">
-          <button class="btn ghost" id="btnExport">Exportar CSV</button>
-          <button
-            class="btn"
-            id="btnSync"
-            title="Recarrega os dados da planilha"
-          >
-            Sincronizar
-          </button>
+        <div class="head-actions">
+          <span id="badgeInfo" class="badge hide"></span>
+          <button id="btnExport" class="btn ghost">Exportar CSV</button>
+          <button id="btnSync" class="btn">Sincronizar</button>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <section class="grid">
-        <!-- COLUNA 1: CADASTRO -->
-        <div class="card">
-          <h3>Cadastro</h3>
-          <form id="formLanc" class="stack">
-            <div class="row split">
-              <input class="input" type="date" id="dt" required />
-              <select id="tipo" required>
-                <option value="">Tipo</option>
+    <main class="wrap">
+      <!-- CADASTRO + FILTROS -->
+      <section class="grid two">
+        <!-- Cadastro -->
+        <section class="card">
+          <h2>Novo lançamento</h2>
+          <form id="formLanc">
+            <div class="grid two">
+              <div>
+                <label for="dt">Data</label><br />
+                <input id="dt" type="date" />
+              </div>
+              <div>
+                <label for="tipo">Tipo</label><br />
+                <select id="tipo">
+                  <option value="">Selecione</option>
+                  <option value="Receita">Receita</option>
+                  <option value="Despesa">Despesa</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="grid two">
+              <div>
+                <label for="categoria">Categoria</label><br />
+                <input
+                  id="categoria"
+                  type="text"
+                  placeholder="Ex.: Arbitragem, Salário..."
+                />
+              </div>
+              <div>
+                <label for="descricao">Descrição</label><br />
+                <input
+                  id="descricao"
+                  type="text"
+                  placeholder="Ex.: Pagamento árbitro"
+                />
+              </div>
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="row">
+              <div>
+                <label for="valorMask">Valor</label><br />
+                <input
+                  id="valorMask"
+                  type="text"
+                  inputmode="numeric"
+                  placeholder="R$ 0,00"
+                />
+              </div>
+              <button class="btn" type="submit" style="margin-top: 18px">
+                Adicionar
+              </button>
+            </div>
+            <div id="msgAdd" class="ok hide"></div>
+            <div class="note">
+              O lançamento será salvo na planilha na aba
+              <strong>lancamentos</strong>.
+            </div>
+          </form>
+        </section>
+
+        <!-- Filtros + resumo -->
+        <section class="card">
+          <h2>Filtros &amp; Resumo</h2>
+          <div class="grid">
+            <div>
+              <label for="busca">Buscar texto</label><br />
+              <input
+                id="busca"
+                type="text"
+                placeholder="Categoria ou descrição..."
+              />
+            </div>
+            <div>
+              <label for="filtroTipo">Tipo</label><br />
+              <select id="filtroTipo">
+                <option value="">Todos</option>
                 <option value="Receita">Receita</option>
                 <option value="Despesa">Despesa</option>
               </select>
             </div>
-            <div class="row split">
-              <input
-                class="input"
-                type="text"
-                id="categoria"
-                placeholder="Categoria (Ex.: Alimentação, Salário)"
-                required
-              />
-              <input
-                class="input"
-                type="text"
-                id="descricao"
-                placeholder="Descrição"
-                required
-              />
+            <div>
+              <label for="periodoMes">Mês (ano-mês)</label><br />
+              <input id="periodoMes" type="month" />
             </div>
-            <div class="row">
-              <input
-                class="input"
-                type="text"
-                inputmode="numeric"
-                id="valorMask"
-                placeholder="R$ 0,00"
-                required
-              />
-              <button class="btn right" type="submit">Adicionar</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- COLUNA 2: FILTROS -->
-        <div class="card">
-          <h3>Filtros</h3>
-          <div class="toolbar">
-            <input
-              class="input"
-              id="busca"
-              placeholder="Buscar por categoria/descrição..."
-            />
-            <select id="filtroTipo">
-              <option value="">Todos</option>
-              <option value="Receita">Receita</option>
-              <option value="Despesa">Despesa</option>
-            </select>
-            <input
-              class="input"
-              type="month"
-              id="periodoDe"
-              placeholder="Mês (YYYY-MM)"
-            />
-            <button class="btn ghost" id="limparFiltros">Limpar</button>
           </div>
-          <p class="hint">
-            O filtro de mês considera o campo "Data" (ano-mês). Ex.: 2025-11.
-          </p>
-        </div>
+
+          <div class="row" style="margin-top: 10px">
+            <button id="btnLimpar" class="btn ghost">Limpar filtros</button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="grid">
+            <div class="pill green" id="resReceitas">Receitas: R$ 0,00</div>
+            <div class="pill red" id="resDespesas">Despesas: R$ 0,00</div>
+            <div class="pill yellow" id="resSaldo">Saldo: R$ 0,00</div>
+          </div>
+
+          <div id="msgErr" class="err hide"></div>
+        </section>
       </section>
 
-      <div style="height: 12px"></div>
-
+      <!-- TABELA -->
       <section class="card">
-        <h3>Tabela</h3>
-        <div style="overflow: auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Categoria</th>
-                <th>Descrição</th>
-                <th>Valor</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
+        <h2>Tabela de lançamentos</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 115px">Data</th>
+              <th style="width: 95px">Tipo</th>
+              <th>Categoria</th>
+              <th>Descrição</th>
+              <th style="width: 130px">Valor</th>
+              <th style="width: 140px">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyLanc">
+            <tr>
+              <td colspan="6" class="empty">Nenhum lançamento carregado.</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
-    </div>
+    </main>
 
     <script>
-      // ================ CONFIG (URL DO WEB APP) ==================
-      // Troque pela URL /exec do seu Apps Script
-      const API_BASE =
-        "https://script.google.com/macros/s/AKfycbzx6fDObocRHcG1IHmuA8nQ8B6ThALv3Ve6tfR57VZ8dRlSENotF5gZ8JSeY_w-f2Jl/exec";
+      /**************** CONFIG ****************/
+      const WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbzx6fDObocRHcG1IHmuA8nQ8B6ThALv3Ve6tfR57VZ8dRlSENotF5gZ8JSeY_w-f2Jl/exec"; // /exec do Apps Script
+      const LOGO_URL = "logo.png"; // opcional, pode trocar
+      /****************************************/
 
-      // ================ ESTADO ==================
+      const $ = (s) => document.querySelector(s);
+
+      $("#logo").src = LOGO_URL;
+
+      // ELEMENTOS
+      const badgeInfo = $("#badgeInfo");
+      const btnSync = $("#btnSync");
+      const btnExport = $("#btnExport");
+
+      const formLanc = $("#formLanc");
+      const inData = $("#dt");
+      const inTipo = $("#tipo");
+      const inCat = $("#categoria");
+      const inDesc = $("#descricao");
+      const inValorMask = $("#valorMask");
+      const msgAdd = $("#msgAdd");
+
+      const busca = $("#busca");
+      const filtroTipo = $("#filtroTipo");
+      const periodoMes = $("#periodoMes");
+      const btnLimpar = $("#btnLimpar");
+      const msgErr = $("#msgErr");
+
+      const tbody = $("#tbodyLanc");
+      const resReceitas = $("#resReceitas");
+      const resDespesas = $("#resDespesas");
+      const resSaldo = $("#resSaldo");
+
+      // STATE
       let lancamentos = []; // {id,data,tipo,categoria,descricao,valor,metodo}
-      const tbody = document.getElementById("tbody");
 
-      // ================ UTILS ===================
-      const BRL = (v) =>
-        Number(v || 0).toLocaleString("pt-BR", {
+      /************* UTILS *************/
+      function show(el) {
+        el.classList.remove("hide");
+      }
+      function hide(el) {
+        el.classList.add("hide");
+      }
+      function clearEl(el) {
+        el.innerHTML = "";
+      }
+      function BRL(v) {
+        return Number(v || 0).toLocaleString("pt-BR", {
           style: "currency",
           currency: "BRL",
         });
-
+      }
       const onlyDigits = (s) => String(s || "").replace(/\D/g, "");
-
       function maskBRLFromDigits(dig) {
         if (!dig) return "R$ 0,00";
         let v = String(parseInt(dig, 10));
@@ -332,7 +452,6 @@
         const dec = v.slice(-2);
         return "R$ " + Number(int).toLocaleString("pt-BR") + "," + dec;
       }
-
       function unmaskBRL(mask) {
         return (
           Number(
@@ -344,133 +463,166 @@
         );
       }
 
-      function toast(msg) {
-        const el = document.createElement("div");
-        el.textContent = msg;
-        el.style.position = "fixed";
-        el.style.bottom = "18px";
-        el.style.right = "18px";
-        el.style.background = "rgba(0,0,0,.85)";
-        el.style.color = "#fff";
-        el.style.padding = "10px 14px";
-        el.style.borderRadius = "10px";
-        el.style.zIndex = 9999;
-        el.style.fontSize = "13px";
-        el.style.boxShadow = "0 10px 30px rgba(0,0,0,.35)";
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 2200);
-      }
+      // Máscara do campo de valor
+      inValorMask.addEventListener("input", (e) => {
+        const dig = onlyDigits(e.target.value);
+        e.target.value = maskBRLFromDigits(dig);
+      });
 
-      // ============== CHAMADAS API (NOVO CODE.GS) =============
-
-      async function callApi(payload) {
-        const res = await fetch(API_BASE, {
+      /************* API HELPERS (modelo estilo campeonato) *************/
+      function api(payload) {
+        return fetch(WEB_APP_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) throw new Error("Falha na comunicação com o servidor");
-        const json = await res.json();
-        if (json.ok === false) {
-          throw new Error(json.error || "Erro na API");
-        }
-        return json;
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          },
+          body: new URLSearchParams(payload),
+        })
+          .then((r) => r.text())
+          .then((t) => {
+            let d;
+            try {
+              d = JSON.parse(t);
+            } catch (e) {
+              throw new Error("Resposta inválida da API: " + t.slice(0, 200));
+            }
+            if (d.ok === false) {
+              throw new Error(d.error || "Erro na API");
+            }
+            return d;
+          });
       }
 
-      async function apiList() {
-        // Você pode passar filtros aqui se quiser (tipo, mes, busca)
-        return callApi({ route: "lanc_list" });
+      async function apiList(filtros = {}) {
+        const payload = {
+          route: "lanc_list",
+        };
+        if (filtros.tipo) payload.tipo = filtros.tipo;
+        if (filtros.mes) payload.mes = filtros.mes;
+        if (filtros.busca) payload.busca = filtros.busca;
+        return api(payload);
       }
 
       async function apiAdd(item) {
-        return callApi({
+        return api({
           route: "lanc_add",
           data: item.data,
           tipo: item.tipo,
           categoria: item.categoria,
           descricao: item.descricao,
-          valor: item.valor,
-          metodo: item.metodo || "",
+          valor: String(item.valor),
         });
       }
 
       async function apiUpdate(item) {
-        return callApi({
+        return api({
           route: "lanc_update",
           id: item.id,
           data: item.data,
           tipo: item.tipo,
           categoria: item.categoria,
           descricao: item.descricao,
-          valor: item.valor,
-          metodo: item.metodo || "",
+          valor: String(item.valor),
         });
       }
 
       async function apiDelete(id) {
-        return callApi({ route: "lanc_delete", id });
+        return api({
+          route: "lanc_delete",
+          id,
+        });
       }
 
-      // ============== RENDER ====================
+      /************* RENDER *************/
       function render() {
-        const busca = document
-          .getElementById("busca")
-          .value.trim()
-          .toLowerCase();
-        const fTipo = document.getElementById("filtroTipo").value;
-        const mes = document.getElementById("periodoDe").value; // yyyy-mm
+        if (!Array.isArray(lancamentos)) lancamentos = [];
 
-        const data = (Array.isArray(lancamentos) ? lancamentos : [])
+        const texto = busca.value.trim().toLowerCase();
+        const tipo = filtroTipo.value;
+        const mes = periodoMes.value; // yyyy-mm
+
+        const filtrados = lancamentos
           .filter((l) => {
             const full = `${l.categoria || ""} ${
               l.descricao || ""
             }`.toLowerCase();
-            const okBusca = !busca || full.includes(busca);
-            const okTipo = !fTipo || l.tipo === fTipo;
+            const okBusca = !texto || full.includes(texto);
+            const okTipo = !tipo || l.tipo === tipo;
             const ym = (l.data || "").slice(0, 7);
             const okMes = !mes || ym === mes;
             return okBusca && okTipo && okMes;
           })
           .sort((a, b) => (a.data < b.data ? 1 : -1));
 
-        tbody.innerHTML = "";
-        for (const l of data) {
+        // Totais
+        let receitas = 0,
+          despesas = 0;
+        filtrados.forEach((l) => {
+          if (l.tipo === "Receita") receitas += l.valor || 0;
+          else if (l.tipo === "Despesa") despesas += l.valor || 0;
+        });
+        const saldo = receitas - despesas;
+
+        resReceitas.textContent = `Receitas: ${BRL(receitas)}`;
+        resDespesas.textContent = `Despesas: ${BRL(despesas)}`;
+        resSaldo.textContent = `Saldo: ${BRL(saldo)}`;
+
+        badgeInfo.textContent = `${filtrados.length} lançamento(s)`;
+        show(badgeInfo);
+
+        clearEl(tbody);
+        if (!filtrados.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" class="empty">Nenhum lançamento encontrado.</td></tr>';
+          return;
+        }
+
+        for (const l of filtrados) {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-          <td><input class="input" type="date" value="${
-            l.data || ""
-          }" data-id="${l.id}" data-field="data"/></td>
-          <td>
-            <select data-id="${l.id}" data-field="tipo" class="input">
-              <option value="Receita" ${
-                l.tipo === "Receita" ? "selected" : ""
-              }>Receita</option>
-              <option value="Despesa" ${
-                l.tipo === "Despesa" ? "selected" : ""
-              }>Despesa</option>
-            </select>
-          </td>
-          <td><input class="input" type="text" value="${
-            l.categoria || ""
-          }" data-id="${l.id}" data-field="categoria"/></td>
-          <td><input class="input" type="text" value="${
-            l.descricao || ""
-          }" data-id="${l.id}" data-field="descricao"/></td>
-          <td><input class="input money" type="text" value="${BRL(
-            l.valor
-          )}" data-id="${l.id}" data-field="valor"/></td>
-          <td>
-            <button class="btn ok" data-act="save" data-id="${
-              l.id
-            }">Salvar</button>
-            <button class="btn bad" data-act="del" data-id="${
-              l.id
-            }">Excluir</button>
-          </td>`;
+            <td>
+              <input class="inp-inline" type="date" value="${
+                l.data || ""
+              }" data-id="${l.id}" data-field="data" />
+            </td>
+            <td>
+              <select class="inp-inline" data-id="${l.id}" data-field="tipo">
+                <option value="Receita" ${
+                  l.tipo === "Receita" ? "selected" : ""
+                }>Receita</option>
+                <option value="Despesa" ${
+                  l.tipo === "Despesa" ? "selected" : ""
+                }>Despesa</option>
+              </select>
+            </td>
+            <td>
+              <input class="inp-inline" type="text" value="${
+                l.categoria || ""
+              }" data-id="${l.id}" data-field="categoria" />
+            </td>
+            <td>
+              <input class="inp-inline" type="text" value="${
+                l.descricao || ""
+              }" data-id="${l.id}" data-field="descricao" />
+            </td>
+            <td>
+              <input class="inp-inline money" type="text" value="${BRL(
+                l.valor
+              )}" data-id="${l.id}" data-field="valor" />
+            </td>
+            <td class="actions-cell">
+              <button class="btn ghost" data-act="save" data-id="${
+                l.id
+              }">Salvar</button>
+              <button class="btn ghost" data-act="del" data-id="${
+                l.id
+              }">Excluir</button>
+            </td>
+          `;
           tbody.appendChild(tr);
         }
 
-        // máscara nos inputs de valor
+        // re-aplica máscara nos inputs de valor
         tbody.querySelectorAll(".money").forEach((inp) => {
           inp.addEventListener("input", (e) => {
             const dig = onlyDigits(e.target.value);
@@ -479,82 +631,89 @@
         });
       }
 
-      // ============== EVENTOS TABELA =============
-      tbody.addEventListener("click", async (ev) => {
-        const btn = ev.target.closest("button");
-        if (!btn) return;
-        const id = btn.getAttribute("data-id");
-        const act = btn.getAttribute("data-act");
+      /************* SYNC *************/
+      async function sync(showToast) {
+        hide(msgErr);
         try {
-          if (act === "del") {
-            if (confirm("Excluir este lançamento?")) {
-              await apiDelete(id);
-              await sync();
-              toast("Excluído");
-            }
+          const filtros = {
+            tipo: filtroTipo.value || "",
+            mes: periodoMes.value || "",
+            busca: busca.value || "",
+          };
+          const json = await apiList(filtros);
+          const items = Array.isArray(json.items) ? json.items : [];
+          lancamentos = items.map((x) => ({
+            id: x.ID || x.id,
+            data: x.Data || x.data || "",
+            tipo: x.Tipo || x.tipo || "",
+            categoria: x.Categoria || x.categoria || "",
+            descricao: x.Descricao || x.descricao || "",
+            valor: Number(x.Valor ?? x.valor ?? 0),
+            metodo: x.Metodo || x.metodo || "",
+          }));
+          if (showToast) {
+            msgAdd.textContent = "Dados sincronizados da planilha.";
+            show(msgAdd);
+            setTimeout(() => hide(msgAdd), 2000);
           }
-          if (act === "save") {
-            const inputs = tbody.querySelectorAll(`[data-id="${id}"]`);
-            const obj = { id };
-            inputs.forEach((i) => {
-              const field = i.getAttribute("data-field");
-              obj[field] = field === "valor" ? unmaskBRL(i.value) : i.value;
-            });
-            await apiUpdate(obj);
-            await sync();
-            toast("Atualizado");
-          }
-        } catch (err) {
-          alert(err.message || "Erro na operação");
+          render();
+        } catch (e) {
+          msgErr.textContent = e.message;
+          show(msgErr);
+        }
+      }
+
+      /************* EVENTOS *************/
+
+      // submit do cadastro
+      formLanc.addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        hide(msgAdd);
+        hide(msgErr);
+
+        const item = {
+          data: inData.value,
+          tipo: inTipo.value,
+          categoria: inCat.value.trim(),
+          descricao: inDesc.value.trim(),
+          valor: unmaskBRL(inValorMask.value),
+        };
+
+        if (!item.data || !item.tipo || !item.categoria || !item.descricao) {
+          msgErr.textContent =
+            "Preencha data, tipo, categoria e descrição para cadastrar.";
+          show(msgErr);
+          return;
+        }
+
+        try {
+          await apiAdd(item);
+          msgAdd.textContent = "Lançamento adicionado.";
+          show(msgAdd);
+          formLanc.reset();
+          inValorMask.value = "R$ 0,00";
+          await sync(false);
+        } catch (e) {
+          msgErr.textContent = e.message;
+          show(msgErr);
         }
       });
 
-      // ============== FORM CADASTRO ==============
-      const valorMask = document.getElementById("valorMask");
-      valorMask.addEventListener("input", (e) => {
-        const dig = onlyDigits(e.target.value);
-        e.target.value = maskBRLFromDigits(dig);
-      });
-
-      document
-        .getElementById("formLanc")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const item = {
-            data: document.getElementById("dt").value,
-            tipo: document.getElementById("tipo").value,
-            categoria: document.getElementById("categoria").value,
-            descricao: document.getElementById("descricao").value,
-            valor: unmaskBRL(valorMask.value),
-            metodo: "",
-          };
-          try {
-            await apiAdd(item);
-            e.target.reset();
-            valorMask.value = "R$ 0,00";
-            await sync();
-            toast("Adicionado");
-          } catch (err) {
-            alert(err.message || "Erro ao adicionar");
-          }
-        });
-
-      // ============== FILTROS ====================
-      document.getElementById("busca").addEventListener("input", render);
-      document.getElementById("filtroTipo").addEventListener("change", render);
-      document.getElementById("periodoDe").addEventListener("change", render);
-      document.getElementById("limparFiltros").addEventListener("click", () => {
-        document.getElementById("busca").value = "";
-        document.getElementById("filtroTipo").value = "";
-        document.getElementById("periodoDe").value = "";
+      // eventos de filtro
+      busca.addEventListener("input", () => render());
+      filtroTipo.addEventListener("change", () => render());
+      periodoMes.addEventListener("change", () => render());
+      btnLimpar.addEventListener("click", () => {
+        busca.value = "";
+        filtroTipo.value = "";
+        periodoMes.value = "";
         render();
       });
 
-      document
-        .getElementById("btnSync")
-        .addEventListener("click", () => sync(true));
+      // botões header
+      btnSync.addEventListener("click", () => sync(true));
 
-      document.getElementById("btnExport").addEventListener("click", () => {
+      btnExport.addEventListener("click", () => {
         const csv = [
           ["ID", "Data", "Tipo", "Categoria", "Descricao", "Valor"],
           ...lancamentos.map((l) => [
@@ -566,8 +725,10 @@
             l.valor,
           ]),
         ]
-          .map((r) =>
-            r.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")
+          .map((linha) =>
+            linha
+              .map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`)
+              .join(",")
           )
           .join("\n");
         const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -579,40 +740,58 @@
         URL.revokeObjectURL(url);
       });
 
-      // ============== SYNC =======================
-      async function sync(showToast) {
-        try {
-          const json = await apiList();
-          console.log("Retorno API:", json);
+      // ações salvar/excluir na tabela
+      tbody.addEventListener("click", async (ev) => {
+        const btn = ev.target.closest("button[data-act]");
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const act = btn.dataset.act;
 
-          const items = Array.isArray(json)
-            ? json
-            : Array.isArray(json.items)
-            ? json.items
-            : [];
+        hide(msgErr);
+        hide(msgAdd);
 
-          lancamentos = items.map((x) => ({
-            id: x.ID || x.id,
-            data: x.Data || x.data || "",
-            tipo: x.Tipo || x.tipo || "",
-            categoria: x.Categoria || x.categoria || "",
-            descricao: x.Descricao || x.descricao || "",
-            valor: Number(x.Valor ?? x.valor ?? 0),
-            metodo: x.Metodo || x.metodo || "",
-          }));
-
-          if (showToast) toast("Dados sincronizados da planilha");
-          render();
-        } catch (err) {
-          alert(err.message || "Erro ao sincronizar");
+        if (act === "del") {
+          if (!confirm("Excluir este lançamento?")) return;
+          try {
+            await apiDelete(id);
+            await sync(false);
+            msgAdd.textContent = "Lançamento excluído.";
+            show(msgAdd);
+          } catch (e) {
+            msgErr.textContent = e.message;
+            show(msgErr);
+          }
         }
-      }
 
-      // Carrega na inicialização
-      window.addEventListener("DOMContentLoaded", () => {
-        valorMask.value = "R$ 0,00";
-        sync(false);
+        if (act === "save") {
+          const inputs = tbody.querySelectorAll(`[data-id="${id}"]`);
+          const obj = { id };
+          inputs.forEach((i) => {
+            const field = i.dataset.field;
+            obj[field] = field === "valor" ? unmaskBRL(i.value) : i.value;
+          });
+          try {
+            await apiUpdate(obj);
+            await sync(false);
+            msgAdd.textContent = "Lançamento atualizado.";
+            show(msgAdd);
+          } catch (e) {
+            msgErr.textContent = e.message;
+            show(msgErr);
+          }
+        }
       });
+
+      /************* INIT *************/
+      (function init() {
+        // deixa hoje como data padrão
+        const t = new Date();
+        const m = String(t.getMonth() + 1).padStart(2, "0");
+        const d = String(t.getDate()).padStart(2, "0");
+        inData.value = `${t.getFullYear()}-${m}-${d}`;
+        inValorMask.value = "R$ 0,00";
+        sync(false);
+      })();
     </script>
   </body>
 </html>
