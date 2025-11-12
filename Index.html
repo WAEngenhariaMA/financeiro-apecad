@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Financeiro — Despesas & Receitas</title>
+    <style>
+      :root {
+        --bg: #1c130e;
+        --bg-2: #231710;
+        --card: #241a14;
+        --ink: #f6eadd;
+        --muted: #d1c2b1;
+        --line: #3a2a1f;
+        --brand: #f59e0b;
+        --ok: #18a77a;
+        --bad: #d64b42;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, var(--bg), var(--bg-2));
+        color: var(--ink);
+        font-family: Inter, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell,
+          sans-serif;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 18px;
+      }
+      header {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .hgroup h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .hgroup p {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .btn {
+        cursor: pointer;
+        background: var(--brand);
+        color: #2b1702;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 700;
+        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.25);
+        transition: 0.2s;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+      .btn.ghost {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        box-shadow: none;
+      }
+      .btn.bad {
+        background: var(--bad);
+        color: #2b0a0a;
+      }
+      .btn.ok {
+        background: #15a374;
+        color: #021d15;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 920px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0)
+        );
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 14px;
+      }
+      .card h3 {
+        margin: 0 0 8px 0;
+        font-size: 15px;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+      .row.split {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      @media (max-width: 480px) {
+        .row {
+          flex-direction: column;
+        }
+        .row.split {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .input,
+      select {
+        appearance: none;
+        background: #21170f;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        padding: 11px 12px;
+        border-radius: 12px;
+        outline: none;
+        width: 100%;
+      }
+      .input::placeholder {
+        color: #bcae9f;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 7px;
+        margin-top: 8px;
+      }
+      thead th {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: left;
+        padding: 6px 8px;
+      }
+      tbody tr {
+        background: var(--card);
+        border: 1px solid var(--line);
+      }
+      tbody td {
+        padding: 8px 8px;
+        vertical-align: middle;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      tbody tr td:first-child {
+        border-left: 1px solid var(--line);
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+      tbody tr td:last-child {
+        border-right: 1px solid var(--line);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+      .right {
+        margin-left: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="hgroup">
+          <h1>Financeiro — Despesas & Receitas</h1>
+          <p>Cadastro • Filtros • Tabela • Google Sheets</p>
+        </div>
+        <div class="row">
+          <button class="btn ghost" id="btnExport">Exportar CSV</button>
+          <button
+            class="btn"
+            id="btnSync"
+            title="Recarrega os dados da planilha"
+          >
+            Sincronizar
+          </button>
+        </div>
+      </header>
+
+      <section class="grid">
+        <!-- COLUNA 1: CADASTRO -->
+        <div class="card">
+          <h3>Cadastro</h3>
+          <form id="formLanc" class="stack">
+            <div class="row split">
+              <input class="input" type="date" id="dt" required />
+              <select id="tipo" required>
+                <option value="">Tipo</option>
+                <option value="Receita">Receita</option>
+                <option value="Despesa">Despesa</option>
+              </select>
+            </div>
+            <div class="row split">
+              <input
+                class="input"
+                type="text"
+                id="categoria"
+                placeholder="Categoria (Ex.: Alimentação, Salário)"
+                required
+              />
+              <input
+                class="input"
+                type="text"
+                id="descricao"
+                placeholder="Descrição"
+                required
+              />
+            </div>
+            <div class="row">
+              <input
+                class="input"
+                type="text"
+                inputmode="numeric"
+                id="valorMask"
+                placeholder="R$ 0,00"
+                required
+              />
+              <button class="btn right" type="submit">Adicionar</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- COLUNA 2: FILTROS -->
+        <div class="card">
+          <h3>Filtros</h3>
+          <div class="toolbar">
+            <input
+              class="input"
+              id="busca"
+              placeholder="Buscar por categoria/descrição..."
+            />
+            <select id="filtroTipo">
+              <option value="">Todos</option>
+              <option value="Receita">Receita</option>
+              <option value="Despesa">Despesa</option>
+            </select>
+            <input
+              class="input"
+              type="month"
+              id="periodoDe"
+              placeholder="Mês (YYYY-MM)"
+            />
+            <button class="btn ghost" id="limparFiltros">Limpar</button>
+          </div>
+          <p class="hint">
+            O filtro de mês considera o campo "Data" (ano-mês). Ex.: 2025-11.
+          </p>
+        </div>
+      </section>
+
+      <div style="height: 12px"></div>
+
+      <section class="card">
+        <h3>Tabela</h3>
+        <div style="overflow: auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Categoria</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // ================ CONFIG (URL DO WEB APP) ==================
+      // Troque pela URL /exec do seu Apps Script
+      const API_BASE =
+        "https://script.google.com/macros/s/AKfycbzx6fDObocRHcG1IHmuA8nQ8B6ThALv3Ve6tfR57VZ8dRlSENotF5gZ8JSeY_w-f2Jl/exec";
+
+      // ================ ESTADO ==================
+      let lancamentos = []; // {id,data,tipo,categoria,descricao,valor,metodo}
+      const tbody = document.getElementById("tbody");
+
+      // ================ UTILS ===================
+      const BRL = (v) =>
+        Number(v || 0).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
+
+      const onlyDigits = (s) => String(s || "").replace(/\D/g, "");
+
+      function maskBRLFromDigits(dig) {
+        if (!dig) return "R$ 0,00";
+        let v = String(parseInt(dig, 10));
+        if (v.length < 3) v = v.padStart(3, "0");
+        const int = v.slice(0, -2);
+        const dec = v.slice(-2);
+        return "R$ " + Number(int).toLocaleString("pt-BR") + "," + dec;
+      }
+
+      function unmaskBRL(mask) {
+        return (
+          Number(
+            String(mask)
+              .replace(/[^0-9,-]/g, "")
+              .replace(/\./g, "")
+              .replace(",", ".")
+          ) || 0
+        );
+      }
+
+      function toast(msg) {
+        const el = document.createElement("div");
+        el.textContent = msg;
+        el.style.position = "fixed";
+        el.style.bottom = "18px";
+        el.style.right = "18px";
+        el.style.background = "rgba(0,0,0,.85)";
+        el.style.color = "#fff";
+        el.style.padding = "10px 14px";
+        el.style.borderRadius = "10px";
+        el.style.zIndex = 9999;
+        el.style.fontSize = "13px";
+        el.style.boxShadow = "0 10px 30px rgba(0,0,0,.35)";
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2200);
+      }
+
+      // ============== CHAMADAS API (NOVO CODE.GS) =============
+
+      async function callApi(payload) {
+        const res = await fetch(API_BASE, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error("Falha na comunicação com o servidor");
+        const json = await res.json();
+        if (json.ok === false) {
+          throw new Error(json.error || "Erro na API");
+        }
+        return json;
+      }
+
+      async function apiList() {
+        // Você pode passar filtros aqui se quiser (tipo, mes, busca)
+        return callApi({ route: "lanc_list" });
+      }
+
+      async function apiAdd(item) {
+        return callApi({
+          route: "lanc_add",
+          data: item.data,
+          tipo: item.tipo,
+          categoria: item.categoria,
+          descricao: item.descricao,
+          valor: item.valor,
+          metodo: item.metodo || "",
+        });
+      }
+
+      async function apiUpdate(item) {
+        return callApi({
+          route: "lanc_update",
+          id: item.id,
+          data: item.data,
+          tipo: item.tipo,
+          categoria: item.categoria,
+          descricao: item.descricao,
+          valor: item.valor,
+          metodo: item.metodo || "",
+        });
+      }
+
+      async function apiDelete(id) {
+        return callApi({ route: "lanc_delete", id });
+      }
+
+      // ============== RENDER ====================
+      function render() {
+        const busca = document
+          .getElementById("busca")
+          .value.trim()
+          .toLowerCase();
+        const fTipo = document.getElementById("filtroTipo").value;
+        const mes = document.getElementById("periodoDe").value; // yyyy-mm
+
+        const data = (Array.isArray(lancamentos) ? lancamentos : [])
+          .filter((l) => {
+            const full = `${l.categoria || ""} ${
+              l.descricao || ""
+            }`.toLowerCase();
+            const okBusca = !busca || full.includes(busca);
+            const okTipo = !fTipo || l.tipo === fTipo;
+            const ym = (l.data || "").slice(0, 7);
+            const okMes = !mes || ym === mes;
+            return okBusca && okTipo && okMes;
+          })
+          .sort((a, b) => (a.data < b.data ? 1 : -1));
+
+        tbody.innerHTML = "";
+        for (const l of data) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+          <td><input class="input" type="date" value="${
+            l.data || ""
+          }" data-id="${l.id}" data-field="data"/></td>
+          <td>
+            <select data-id="${l.id}" data-field="tipo" class="input">
+              <option value="Receita" ${
+                l.tipo === "Receita" ? "selected" : ""
+              }>Receita</option>
+              <option value="Despesa" ${
+                l.tipo === "Despesa" ? "selected" : ""
+              }>Despesa</option>
+            </select>
+          </td>
+          <td><input class="input" type="text" value="${
+            l.categoria || ""
+          }" data-id="${l.id}" data-field="categoria"/></td>
+          <td><input class="input" type="text" value="${
+            l.descricao || ""
+          }" data-id="${l.id}" data-field="descricao"/></td>
+          <td><input class="input money" type="text" value="${BRL(
+            l.valor
+          )}" data-id="${l.id}" data-field="valor"/></td>
+          <td>
+            <button class="btn ok" data-act="save" data-id="${
+              l.id
+            }">Salvar</button>
+            <button class="btn bad" data-act="del" data-id="${
+              l.id
+            }">Excluir</button>
+          </td>`;
+          tbody.appendChild(tr);
+        }
+
+        // máscara nos inputs de valor
+        tbody.querySelectorAll(".money").forEach((inp) => {
+          inp.addEventListener("input", (e) => {
+            const dig = onlyDigits(e.target.value);
+            e.target.value = maskBRLFromDigits(dig);
+          });
+        });
+      }
+
+      // ============== EVENTOS TABELA =============
+      tbody.addEventListener("click", async (ev) => {
+        const btn = ev.target.closest("button");
+        if (!btn) return;
+        const id = btn.getAttribute("data-id");
+        const act = btn.getAttribute("data-act");
+        try {
+          if (act === "del") {
+            if (confirm("Excluir este lançamento?")) {
+              await apiDelete(id);
+              await sync();
+              toast("Excluído");
+            }
+          }
+          if (act === "save") {
+            const inputs = tbody.querySelectorAll(`[data-id="${id}"]`);
+            const obj = { id };
+            inputs.forEach((i) => {
+              const field = i.getAttribute("data-field");
+              obj[field] = field === "valor" ? unmaskBRL(i.value) : i.value;
+            });
+            await apiUpdate(obj);
+            await sync();
+            toast("Atualizado");
+          }
+        } catch (err) {
+          alert(err.message || "Erro na operação");
+        }
+      });
+
+      // ============== FORM CADASTRO ==============
+      const valorMask = document.getElementById("valorMask");
+      valorMask.addEventListener("input", (e) => {
+        const dig = onlyDigits(e.target.value);
+        e.target.value = maskBRLFromDigits(dig);
+      });
+
+      document
+        .getElementById("formLanc")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const item = {
+            data: document.getElementById("dt").value,
+            tipo: document.getElementById("tipo").value,
+            categoria: document.getElementById("categoria").value,
+            descricao: document.getElementById("descricao").value,
+            valor: unmaskBRL(valorMask.value),
+            metodo: "",
+          };
+          try {
+            await apiAdd(item);
+            e.target.reset();
+            valorMask.value = "R$ 0,00";
+            await sync();
+            toast("Adicionado");
+          } catch (err) {
+            alert(err.message || "Erro ao adicionar");
+          }
+        });
+
+      // ============== FILTROS ====================
+      document.getElementById("busca").addEventListener("input", render);
+      document.getElementById("filtroTipo").addEventListener("change", render);
+      document.getElementById("periodoDe").addEventListener("change", render);
+      document.getElementById("limparFiltros").addEventListener("click", () => {
+        document.getElementById("busca").value = "";
+        document.getElementById("filtroTipo").value = "";
+        document.getElementById("periodoDe").value = "";
+        render();
+      });
+
+      document
+        .getElementById("btnSync")
+        .addEventListener("click", () => sync(true));
+
+      document.getElementById("btnExport").addEventListener("click", () => {
+        const csv = [
+          ["ID", "Data", "Tipo", "Categoria", "Descricao", "Valor"],
+          ...lancamentos.map((l) => [
+            l.id,
+            l.data,
+            l.tipo,
+            l.categoria,
+            l.descricao,
+            l.valor,
+          ]),
+        ]
+          .map((r) =>
+            r.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")
+          )
+          .join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "lancamentos.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      // ============== SYNC =======================
+      async function sync(showToast) {
+        try {
+          const json = await apiList();
+          console.log("Retorno API:", json);
+
+          const items = Array.isArray(json)
+            ? json
+            : Array.isArray(json.items)
+            ? json.items
+            : [];
+
+          lancamentos = items.map((x) => ({
+            id: x.ID || x.id,
+            data: x.Data || x.data || "",
+            tipo: x.Tipo || x.tipo || "",
+            categoria: x.Categoria || x.categoria || "",
+            descricao: x.Descricao || x.descricao || "",
+            valor: Number(x.Valor ?? x.valor ?? 0),
+            metodo: x.Metodo || x.metodo || "",
+          }));
+
+          if (showToast) toast("Dados sincronizados da planilha");
+          render();
+        } catch (err) {
+          alert(err.message || "Erro ao sincronizar");
+        }
+      }
+
+      // Carrega na inicialização
+      window.addEventListener("DOMContentLoaded", () => {
+        valorMask.value = "R$ 0,00";
+        sync(false);
+      });
+    </script>
+  </body>
+</html>
