@@ -6,8 +6,9 @@
     <title>Financeiro — Despesas & Receitas</title>
     <style>
       :root {
-        --bg: #0f172a;
-        --panel: #0b1220;
+        --bg: #020617;
+        --panel: #020b1c;
+        --panel-soft: #020818;
         --line: #1f2937;
         --ink: #e5e7eb;
         --muted: #94a3b8;
@@ -18,233 +19,361 @@
       }
       body {
         margin: 0;
-        background: linear-gradient(160deg, var(--bg), #060a12);
+        background: radial-gradient(circle at top, #0b1120 0, #020617 55%);
         color: var(--ink);
         font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
       }
       .wrap {
-        max-width: 980px;
-        margin: 16px auto;
-        padding: 0 14px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px 24px;
       }
+
+      /* HEADER */
       header {
         position: sticky;
         top: 0;
         z-index: 10;
         background: linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.03),
-          rgba(0, 0, 0, 0)
+          rgba(15, 23, 42, 0.98),
+          rgba(15, 23, 42, 0.88),
+          rgba(15, 23, 42, 0)
         );
-        backdrop-filter: blur(6px);
-        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+        margin-bottom: 8px;
       }
       .head-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 14px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding: 10px 14px;
+        gap: 16px;
       }
       .brand {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
       }
       .brand img {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
         object-fit: cover;
         border: 1px solid var(--line);
         background: #000;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
       }
       .brand h1 {
-        font-size: 16px;
+        font-size: 18px;
         margin: 0;
         font-weight: 800;
         line-height: 1.2;
       }
+
       .head-actions {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      a.btn-link,
-      button.btn {
-        border-radius: 10px;
-        border: 1px solid var(--line);
-        padding: 10px 12px;
-        background: #0a0f1a;
-        color: #fff;
-        text-decoration: none;
-        cursor: pointer;
-      }
-      button.btn {
-        background: var(--brand);
-        color: #111;
-        font-weight: 800;
-        border: none;
-      }
-      button.ghost {
-        background: transparent;
-        color: #fff;
-        border: 1px solid var(--line);
-      }
-      .badge {
-        padding: 4px 8px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: #0a0f1a;
-        color: #cbd5e1;
-        font-size: 11px;
-      }
-      .card {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 14px;
-        margin: 12px 0;
-      }
-      .row {
         display: flex;
         gap: 10px;
         align-items: center;
         flex-wrap: wrap;
       }
-      label {
-        font-size: 12px;
-        color: var(--muted);
-      }
-      input,
-      select {
-        border-radius: 10px;
+
+      a.btn-link,
+      button.btn {
+        border-radius: 999px;
         border: 1px solid var(--line);
-        padding: 10px 12px;
-        background: #0a0f1a;
-        color: #fff;
+        padding: 10px 18px;
+        min-width: 130px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #020617;
+        color: #e5e7eb;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        transition: 0.18s ease;
       }
-      input::placeholder {
-        color: #64748b;
+      a.btn-link:hover {
+        background: #02081b;
+        transform: translateY(-1px);
       }
-      input[type="number"] {
-        width: 110px;
-        text-align: right;
+      button.btn {
+        background: linear-gradient(135deg, #fbbf24, #f97316);
+        color: #111827;
+        border: none;
+        box-shadow: 0 10px 30px rgba(248, 181, 35, 0.35);
+      }
+      button.btn:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+      }
+      button.ghost {
+        background: transparent;
+        color: #e5e7eb;
+        border-color: var(--line);
+        box-shadow: none;
+      }
+      button.ghost:hover {
+        background: rgba(15, 23, 42, 0.8);
+      }
+
+      .badge {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #020617;
+        color: #cbd5e1;
+        font-size: 11px;
+      }
+
+      /* CARDS / GRID */
+      .card {
+        background: radial-gradient(circle at top, #020b1c 0, #020617 70%);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 18px 18px 16px;
+        margin: 16px 0;
+        box-shadow: 0 18px 35px rgba(15, 23, 42, 0.85);
       }
       h2 {
-        margin: 0 0 8px;
+        margin: 0 0 10px;
         font-size: 18px;
       }
       h3 {
         margin: 0 0 8px;
         font-size: 16px;
       }
+
       .grid {
         display: grid;
-        gap: 10px;
+        gap: 14px;
       }
       .grid.two {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.15fr 0.85fr;
       }
-      @media (max-width: 860px) {
+      @media (max-width: 960px) {
         .grid.two {
           grid-template-columns: 1fr;
         }
       }
-      .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
+
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
       }
-      .table th,
-      .table td {
-        border-bottom: 1px solid var(--line);
-        padding: 8px;
-        text-align: left;
-      }
-      .table thead th {
-        color: #9aa4b2;
+
+      label {
         font-size: 12px;
-        background: #0c1424;
+        color: var(--muted);
+        display: inline-block;
+        margin-bottom: 4px;
       }
-      .empty {
-        padding: 12px;
-        border: 1px dashed var(--line);
-        border-radius: 10px;
-        color: #9aa4b2;
-        text-align: center;
+
+      input,
+      select {
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        background: #020617;
+        color: #fff;
+        width: 100%;
+        font-size: 13px;
       }
+      input::placeholder {
+        color: #64748b;
+      }
+      input[type="date"],
+      input[type="month"],
+      select {
+        min-height: 40px;
+      }
+      input[type="number"] {
+        text-align: right;
+      }
+
+      .note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      .sep {
+        height: 1px;
+        background: radial-gradient(circle at left, #1e293b, #020617);
+        margin: 14px 0;
+        border-radius: 999px;
+        opacity: 0.85;
+      }
+
       .ok {
         background: rgba(16, 185, 129, 0.12);
         border: 1px solid #064e3b;
         color: #a7f3d0;
-        padding: 10px;
-        border-radius: 10px;
-        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        margin-top: 10px;
         font-size: 13px;
       }
       .err {
         background: rgba(239, 68, 68, 0.12);
         border: 1px solid #7f1d1d;
         color: #fecaca;
-        padding: 10px;
-        border-radius: 10px;
-        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        margin-top: 10px;
         font-size: 13px;
       }
-      .note {
-        font-size: 12px;
-        color: var(--muted);
-      }
+
       .hide {
         display: none !important;
       }
-      .sep {
-        height: 1px;
-        background: var(--line);
-        margin: 10px 0;
-        border-radius: 1px;
-      }
+
+      /* PILLS RESUMO */
       .pill {
-        padding: 6px 10px;
+        padding: 8px 12px;
         border-radius: 999px;
         border: 1px solid var(--line);
-        font-size: 12px;
+        font-size: 13px;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .pill span.label {
+        opacity: 0.9;
+      }
+      .pill span.value {
+        font-weight: 700;
+      }
+      .grid-sum {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
       }
       .pill.green {
-        background: rgba(16, 185, 129, 0.1);
-        color: #6ee7b7;
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.14), #022c22);
+        color: #bbf7d0;
         border-color: #059669;
       }
       .pill.red {
-        background: rgba(239, 68, 68, 0.12);
+        background: linear-gradient(135deg, rgba(248, 113, 113, 0.14), #450a0a);
         color: #fecaca;
         border-color: #b91c1c;
       }
       .pill.yellow {
-        background: rgba(245, 158, 11, 0.12);
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), #451a03);
         color: #fed7aa;
         border-color: #c2410c;
       }
-      .actions-cell button {
-        margin-right: 4px;
-        margin-bottom: 4px;
+
+      /* TABELA */
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        table-layout: fixed;
       }
+      .table th,
+      .table td {
+        border-bottom: 1px solid rgba(15, 23, 42, 0.95);
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 13px;
+      }
+      .table thead th {
+        color: #9aa4b2;
+        font-size: 12px;
+        background: #020b1c;
+        font-weight: 600;
+      }
+      .table tbody tr:nth-child(odd) {
+        background: #020818;
+      }
+      .table tbody tr:nth-child(even) {
+        background: #020b1c;
+      }
+      .table tbody tr:hover {
+        background: #0b1120;
+      }
+
+      .empty {
+        padding: 14px;
+        border-radius: 12px;
+        color: #9aa4b2;
+        text-align: center;
+        background: #020617;
+        border: 1px dashed var(--line);
+      }
+
+      .actions-cell {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .actions-cell button {
+        flex: 1;
+        min-width: 0;
+        padding-inline: 0;
+        height: 34px;
+        border-radius: 999px;
+        font-size: 12px;
+      }
+
       .inp-inline {
         width: 100%;
       }
-      @media (max-width: 640px) {
+
+      @media (max-width: 860px) {
         .head-inner {
           flex-direction: column;
           align-items: flex-start;
+        }
+      }
+      @media (max-width: 720px) {
+        .table thead {
+          display: none;
+        }
+        .table,
+        .table tbody,
+        .table tr,
+        .table td {
+          display: block;
+          width: 100%;
+        }
+        .table tr {
+          margin-bottom: 10px;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .table td {
+          border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+        }
+        .table td::before {
+          content: attr(data-label);
+          display: block;
+          font-size: 11px;
+          color: var(--muted);
+          margin-bottom: 2px;
+        }
+        .actions-cell {
+          justify-content: flex-end;
         }
       }
     </style>
   </head>
   <body>
     <header>
-      <div class="head-inner wrap">
+      <div class="head-inner">
         <div class="brand">
           <img id="logo" alt="Logo" />
           <h1>Financeiro — Despesas &amp; Receitas</h1>
@@ -303,7 +432,7 @@
             <div class="sep"></div>
 
             <div class="row">
-              <div>
+              <div style="max-width: 200px; flex: 1">
                 <label for="valorMask">Valor</label><br />
                 <input
                   id="valorMask"
@@ -312,7 +441,7 @@
                   placeholder="R$ 0,00"
                 />
               </div>
-              <button class="btn" type="submit" style="margin-top: 18px">
+              <button class="btn" type="submit" style="margin-top: 22px">
                 Adicionar
               </button>
             </div>
@@ -350,16 +479,25 @@
             </div>
           </div>
 
-          <div class="row" style="margin-top: 10px">
+          <div class="row" style="margin-top: 12px">
             <button id="btnLimpar" class="btn ghost">Limpar filtros</button>
           </div>
 
           <div class="sep"></div>
 
-          <div class="grid">
-            <div class="pill green" id="resReceitas">Receitas: R$ 0,00</div>
-            <div class="pill red" id="resDespesas">Despesas: R$ 0,00</div>
-            <div class="pill yellow" id="resSaldo">Saldo: R$ 0,00</div>
+          <div class="grid grid-sum">
+            <div class="pill green" id="resReceitas">
+              <span class="label">Receitas</span>
+              <span class="value">R$ 0,00</span>
+            </div>
+            <div class="pill red" id="resDespesas">
+              <span class="label">Despesas</span>
+              <span class="value">R$ 0,00</span>
+            </div>
+            <div class="pill yellow" id="resSaldo">
+              <span class="label">Saldo</span>
+              <span class="value">R$ 0,00</span>
+            </div>
           </div>
 
           <div id="msgErr" class="err hide"></div>
@@ -372,12 +510,12 @@
         <table class="table">
           <thead>
             <tr>
-              <th style="width: 115px">Data</th>
-              <th style="width: 95px">Tipo</th>
+              <th style="width: 140px">Data</th>
+              <th style="width: 110px">Tipo</th>
               <th>Categoria</th>
               <th>Descrição</th>
-              <th style="width: 130px">Valor</th>
-              <th style="width: 140px">Ações</th>
+              <th style="width: 150px">Valor</th>
+              <th style="width: 180px">Ações</th>
             </tr>
           </thead>
           <tbody id="tbodyLanc">
@@ -392,8 +530,8 @@
     <script>
       /**************** CONFIG ****************/
       const WEB_APP_URL =
-        "https://script.google.com/macros/s/AKfycbzx6fDObocRHcG1IHmuA8nQ8B6ThALv3Ve6tfR57VZ8dRlSENotF5gZ8JSeY_w-f2Jl/exec"; // /exec do Apps Script
-      const LOGO_URL = "logo.png"; // opcional, pode trocar
+        "https://script.google.com/macros/s/AKfycbzx6fDObocRHcG1IHmuA8nQ8B6ThALv3Ve6tfR57VZ8dRlSENotF5gZ8JSeY_w-f2Jl/exec";
+      const LOGO_URL = "logo.png";
       /****************************************/
 
       const $ = (s) => document.querySelector(s);
@@ -469,7 +607,7 @@
         e.target.value = maskBRLFromDigits(dig);
       });
 
-      /************* API HELPERS (modelo estilo campeonato) *************/
+      /************* API HELPERS *************/
       function api(payload) {
         return fetch(WEB_APP_URL, {
           method: "POST",
@@ -563,9 +701,9 @@
         });
         const saldo = receitas - despesas;
 
-        resReceitas.textContent = `Receitas: ${BRL(receitas)}`;
-        resDespesas.textContent = `Despesas: ${BRL(despesas)}`;
-        resSaldo.textContent = `Saldo: ${BRL(saldo)}`;
+        resReceitas.querySelector(".value").textContent = BRL(receitas);
+        resDespesas.querySelector(".value").textContent = BRL(despesas);
+        resSaldo.querySelector(".value").textContent = BRL(saldo);
 
         badgeInfo.textContent = `${filtrados.length} lançamento(s)`;
         show(badgeInfo);
@@ -580,12 +718,12 @@
         for (const l of filtrados) {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>
+            <td data-label="Data">
               <input class="inp-inline" type="date" value="${
                 l.data || ""
               }" data-id="${l.id}" data-field="data" />
             </td>
-            <td>
+            <td data-label="Tipo">
               <select class="inp-inline" data-id="${l.id}" data-field="tipo">
                 <option value="Receita" ${
                   l.tipo === "Receita" ? "selected" : ""
@@ -595,22 +733,22 @@
                 }>Despesa</option>
               </select>
             </td>
-            <td>
+            <td data-label="Categoria">
               <input class="inp-inline" type="text" value="${
                 l.categoria || ""
               }" data-id="${l.id}" data-field="categoria" />
             </td>
-            <td>
+            <td data-label="Descrição">
               <input class="inp-inline" type="text" value="${
                 l.descricao || ""
               }" data-id="${l.id}" data-field="descricao" />
             </td>
-            <td>
+            <td data-label="Valor">
               <input class="inp-inline money" type="text" value="${BRL(
                 l.valor
               )}" data-id="${l.id}" data-field="valor" />
             </td>
-            <td class="actions-cell">
+            <td data-label="Ações" class="actions-cell">
               <button class="btn ghost" data-act="save" data-id="${
                 l.id
               }">Salvar</button>
@@ -664,8 +802,6 @@
       }
 
       /************* EVENTOS *************/
-
-      // submit do cadastro
       formLanc.addEventListener("submit", async (ev) => {
         ev.preventDefault();
         hide(msgAdd);
@@ -699,7 +835,6 @@
         }
       });
 
-      // eventos de filtro
       busca.addEventListener("input", () => render());
       filtroTipo.addEventListener("change", () => render());
       periodoMes.addEventListener("change", () => render());
@@ -710,7 +845,6 @@
         render();
       });
 
-      // botões header
       btnSync.addEventListener("click", () => sync(true));
 
       btnExport.addEventListener("click", () => {
@@ -740,7 +874,6 @@
         URL.revokeObjectURL(url);
       });
 
-      // ações salvar/excluir na tabela
       tbody.addEventListener("click", async (ev) => {
         const btn = ev.target.closest("button[data-act]");
         if (!btn) return;
@@ -784,7 +917,6 @@
 
       /************* INIT *************/
       (function init() {
-        // deixa hoje como data padrão
         const t = new Date();
         const m = String(t.getMonth() + 1).padStart(2, "0");
         const d = String(t.getDate()).padStart(2, "0");
